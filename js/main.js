@@ -1,5 +1,13 @@
-m = document.getElementById('life').getContext('2d');
-size = 500
+canvas = document.getElementById('life');
+speed_slider = document.getElementById('speed-slider');
+fps_display = document.getElementById('fps-display');
+m = canvas.getContext('2d');
+
+fps = 0;
+height = 700;
+width = 700;
+canvas.height = height;
+canvas.width = width;
 
 draw = (x, y, c, s) => {
     m.fillStyle = c
@@ -12,7 +20,7 @@ particle = (x, y, c) => {
 }
 
 random = () => {
-    return Math.random() * (size - 100) + 50
+    return Math.random() * (width - 100) + 50
 }
 
 create = (number, color) => {
@@ -40,14 +48,14 @@ rule = (particles1, particles2, g) => {
                 fy += (F * dy)
             }
         }
-        a.vx = (a.vx + fx) * 0.5
-        a.vy = (a.vy + fy) * 0.5
+        a.vx = (a.vx + fx) * speed
+        a.vy = (a.vy + fy) * speed
         a.x += a.vx
         a.y += a.vy
-        if (a.x <= 0 || a.x >= size){
+        if (a.x <= 0 || a.x >= width){
             a.vx *= -1
         }
-        if (a.y <= 0 || a.y >= size){
+        if (a.y <= 0 || a.y >= height){
             a.vy *= -1
         }
     }
@@ -58,23 +66,26 @@ red = create(200, "red")
 green = create(200, "green")
 
 update = () => {
-    const t0 = performance.now();
-    rule(green, green, 0.32)
-    rule(green, red, -0.17)
-    rule(green, yellow, 0.34)
-    rule(red, red, -0.10)
-    rule(red, green, 0.34)
-    rule(yellow, yellow, 0.15)
-    rule(yellow, green, -0.20)
+  speed = speed_slider.value / 100;
+  const t0 = performance.now();
 
-    m.clearRect(0, 0, size, size)
-    draw(0, 0, "black", size)
-    for (i = 0; i < particles.length; i++){
-        draw(particles[i].x, particles[i].y, particles[i].color, 5)
-    }
-    requestAnimationFrame(update)
-    const t1 = performance.now();
-    console.log("FPS: " + (1 / ((t1 - t0)/1000)).toFixed(0));
+  rule(green, green, 0.32)
+  rule(green, red, -0.17)
+  rule(green, yellow, 0.34)
+  rule(red, red, -0.10)
+  rule(red, green, 0.34)
+  rule(yellow, yellow, 0.15)
+  rule(yellow, green, -0.20)
+
+  m.clearRect(0, 0, width, height)
+  draw(0, 0, "black", width, height)
+  for (i = 0; i < particles.length; i++){
+      draw(particles[i].x, particles[i].y, particles[i].color, 5)
+  }
+  requestAnimationFrame(update)
+
+  const t1 = performance.now();
+  fps_display.innerHTML = (1 / ((t1 - t0)/1000)).toFixed(1);
 }
 
 update();
