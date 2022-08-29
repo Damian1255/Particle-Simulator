@@ -12,7 +12,18 @@
     </section>
     <section class="display">
       <p id="fps-display"></p>
-      <input type="range" min="0" max="100" value="50" id="speed-slider">
+      <div class="create-particles">
+        <input type="number" id="create-amount" min="0" max="1000" value="0" placeholder="Amount">
+        <input type="text" id="create-color" value="" placeholder="Color">
+        <input type="button" value="Create" onclick="createParticle()">
+      </div>
+      <div class="create-rules">
+        <input type="text" id="rule1-color" value="" placeholder="Particle 1">
+        <input type="text" id="rule2-color" value="" placeholder="Particle 2">
+        <input type="number" id="rule-force" min="-100" max="100" value="0" placeholder="Force">
+        <input type="button" value="Create" onclick="createRule()">
+      </div>
+      <input type="range" min="0" max="100" value="50" id="velocity-slider">
       <script src="js/main.js" type="text/javascript"></script>
     </section>
   </body>

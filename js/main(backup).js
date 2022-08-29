@@ -16,7 +16,7 @@ draw = (x, y, c, s) => {
 
 particles = []
 particle = (x, y, c) => {
-    return {'x': x, 'y': y, 'vx': 0, 'vy': 0, 'color': c}
+    return{'x': x, 'y': y, 'vx': 0, 'vy': 0, 'color': c}
 }
 
 random = () => {
@@ -62,18 +62,20 @@ rule = (particles1, particles2, g) => {
 }
 
 yellow = create(200, "yellow")
+red = create(200, "red")
 green = create(200, "green")
-created_particles = [];
-
-rules = [{'particle1': yellow, 'particle2': yellow, 'g': 0.12}, {'particle1': green, 'particle2': yellow, 'g': -0.50}]
 
 update = () => {
   velocity = velocity_slider.value / 100;
   const t0 = performance.now();
 
-  for (x = 0; x < rules.length; x++){
-    rule(rules[x].particle1, rules[x].particle2, rules[x].g)
-  }
+  rule(green, green, 0.32)
+  rule(green, red, -0.17)
+  rule(green, yellow, 0.34)
+  rule(red, red, -0.10)
+  rule(red, green, 0.34)
+  rule(yellow, yellow, 0.15)
+  rule(yellow, green, -0.20)
 
   m.clearRect(0, 0, width, height)
   draw(0, 0, "black", width, height)
@@ -83,33 +85,14 @@ update = () => {
   requestAnimationFrame(update)
 
   const t1 = performance.now();
-  fps_display.innerHTML = (1 / ((t1 - t0)/1000)).toFixed(0);
+  fps_display.innerHTML = (1 / ((t1 - t0)/1000)).toFixed(1);
 }
 
 function createParticle() {
   amount = document.getElementById("create-amount").value;
   color = document.getElementById("create-color").value;
-  created_particles.push(create(amount, color));
-  console.log("Created " + amount + " " + color + " particles.");
-}
-
-function createRule() {
-  rule1 = document.getElementById("rule1-color").value;
-  rule2 = document.getElementById("rule2-color").value;
-  g = document.getElementById("rule-force").value;
-
-  r = {}
-  for (i = 0; i < created_particles.length; i++){
-    if (created_particles[i][0].color == rule1){
-      r['particle1'] = created_particles[i]
-    }
-    if (created_particles[i][0].color == rule2){
-      r['particle2'] = created_particles[i]
-    }
-  }
-  r['g'] = parseFloat(g / 100);
-  rules.push(r);
-  console.log(rules);
+  create(amount, color);
+  console.log("created " + amount + " " + color + " particles");
 }
 
 update();
