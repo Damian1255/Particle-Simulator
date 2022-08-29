@@ -107,7 +107,7 @@ function createRule() {
   }
   r['g'] = parseFloat(g);
   rules.push(r);
-  console.log("Created rule between" + rule1 + " and " + rule2 + " with " + g + " force.");
+  console.log("Created rule between " + rule1 + " and " + rule2 + " with " + g + " of force.");
 }
 
 update();
