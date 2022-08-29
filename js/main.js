@@ -61,11 +61,9 @@ rule = (particles1, particles2, g) => {
     }
 }
 
-yellow = create(200, "yellow")
-green = create(200, "green")
-created_particles = [];
 
-rules = [{'particle1': yellow, 'particle2': yellow, 'g': 0.12}, {'particle1': green, 'particle2': yellow, 'g': -0.50}]
+created_particles = [];
+rules = []
 
 update = () => {
   velocity = velocity_slider.value / 100;
@@ -107,9 +105,9 @@ function createRule() {
       r['particle2'] = created_particles[i]
     }
   }
-  r['g'] = parseFloat(g / 100);
+  r['g'] = parseFloat(g);
   rules.push(r);
-  console.log(rules);
+  console.log("Created rule between" + rule1 + " and " + rule2 + " with " + g + " force.");
 }
 
 update();
