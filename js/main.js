@@ -10,7 +10,6 @@ var height = 700;
 var width = 700;
 var paused = false
 
-var particles = [];
 var created_particles = [];
 var created_rules = [];
 
@@ -34,7 +33,6 @@ create = (number, color) => {
     var group = [];
     for (let i=0; i < number; i++) {
         group.push(particle(random(), random(), color))
-        particles.push(group[i])
     }
     return group
 }
@@ -78,8 +76,10 @@ update = () => {
   }
   m.clearRect(0, 0, width, height)
   draw(0, 0, "black", width, height)
-  for (i = 0; i < particles.length; i++){
-    draw(particles[i].x, particles[i].y, particles[i].color, 4)
+  for (i = 0; i < created_particles.length; i++){
+    for (j = 0; j < created_particles[i].length; j++){
+      draw(created_particles[i][j].x, created_particles[i][j].y, created_particles[i][j].color, 4)
+    }
   }
   requestAnimationFrame(update)
   const t1 = performance.now();
@@ -89,7 +89,6 @@ update = () => {
 update();
 
 reset = () => {
-  particles = []
   created_particles = [];
   created_rules = []
 
@@ -157,15 +156,10 @@ function importFile(e) {
     var obj = JSON.parse(event.target.result);
 
     created_particles = obj[0]
-
-    for (i = 0; i < created_particles.length; i++) {
-      for (x = 0; x < created_particles[i].length; x++){
-        particles.push(created_particles[i][x])
-      }
-    }
     for (i of obj[1]){
       newRule(i[0], i[1], i[2])
     }
+
     displayParticles()
   };
   reader.readAsText(event.target.files[0]);
