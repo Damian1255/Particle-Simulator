@@ -7,6 +7,7 @@ var m = canvas.getContext('2d');
 var fps = 0;
 var height = 700;
 var width = 700;
+var paused = false
 
 var particles = [];
 var created_particles = [];
@@ -69,19 +70,17 @@ rule = (particles1, particles2, g) => {
 update = () => {
   velocity = velocity_slider.value / 100;
   const t0 = performance.now();
-  displayRules();
-
-  for (x = 0; x < created_rules.length; x++){
-    rule(created_rules[x].particle1, created_rules[x].particle2, created_rules[x].g)
+  if (!paused) {
+    for (x = 0; x < created_rules.length; x++){
+      rule(created_rules[x].particle1, created_rules[x].particle2, created_rules[x].g)
+    }
   }
-
   m.clearRect(0, 0, width, height)
   draw(0, 0, "black", width, height)
   for (i = 0; i < particles.length; i++){
-      draw(particles[i].x, particles[i].y, particles[i].color, 4)
+    draw(particles[i].x, particles[i].y, particles[i].color, 4)
   }
   requestAnimationFrame(update)
-
   const t1 = performance.now();
   fps_display.innerHTML = (1 / ((t1 - t0)/1000)).toFixed(0);
 }
@@ -103,33 +102,40 @@ function createParticle() {
   console.log("Created " + amount + " " + color + " particles.");
 }
 
-function createRule() {
-  rule1 = document.getElementById("rule1-color").value;
-  rule2 = document.getElementById("rule2-color").value;
-  g = document.getElementById("rule-force").value;
-
+function newRule(particle1, particle2, g) {
   r = {}
   for (i = 0; i < created_particles.length; i++){
-    if (created_particles[i][0].color == rule1){
+    if (created_particles[i][0].color == particle1){
       r['particle1'] = created_particles[i]
     }
-    if (created_particles[i][0].color == rule2){
+    if (created_particles[i][0].color == particle2){
       r['particle2'] = created_particles[i]
     }
   }
   r['g'] = parseFloat(g);
   created_rules.push(r);
-  console.log("Created rule between " + rule1 + " and " + rule2 + " with " + g + " of force.");
-  console.log(created_particles);
-  console.log(created_rules);
-  console.log(particles);
+  displayRules();
+  console.log("Created rule between " + particle1 + " and " + particle2 +
+              " with " + g + " of force.");
+}
+
+function createRule() {
+  particle1 = document.getElementById("rule1-color").value;
+  particle2 = document.getElementById("rule2-color").value;
+  g = document.getElementById("rule-force").value;
+
+  newRule(particle1, particle2, g)
 }
 
 function exportFile() {
-  const data = [created_particles, created_rules]
+  c_rules = []
+  for (var i of created_rules){
+    c_rules.push([i.particle1[0].color, i.particle2[0].color, i.g]);
+  }
+
+  const data = [created_particles, c_rules]
   const filename = 'data.json';
   const jsonStr = JSON.stringify(data);
-  console.log(data);
 
   let element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(jsonStr));
@@ -148,9 +154,6 @@ function importFile(e) {
     reset();
     var obj = JSON.parse(event.target.result);
 
-    console.log("RULES:");
-    console.log(obj[1]);
-
     created_particles = obj[0]
 
     for (i = 0; i < created_particles.length; i++) {
@@ -158,7 +161,10 @@ function importFile(e) {
         particles.push(created_particles[i][x])
       }
     }
-    created_rules = obj[1]
+    for (i of obj[1]){
+      console.log(i);
+      newRule(i[0], i[1], i[2])
+    }
   };
   reader.readAsText(event.target.files[0]);
   e.value = null;
@@ -171,8 +177,13 @@ function displayRules() {
   }
 }
 
-function debug() {
-  console.log(created_particles);
-  console.log(created_rules);
-  console.log(particles);
+function process(e) {
+  if (e.value == "Pause") {
+    paused = true
+    e.value = "Play"
+  } else if (e.value == "Play"){
+    paused = false
+    e.value = "Pause"
+  }
+  console.log(paused);
 }
