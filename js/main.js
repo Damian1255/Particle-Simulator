@@ -92,7 +92,7 @@ update();
 
 reset = () => {
   created_particles = [];
-  created_rules = []
+  created_rules = [];
 
   console.log("Reset");
 }
