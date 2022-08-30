@@ -6,6 +6,7 @@ m = canvas.getContext('2d');
 fps = 0;
 height = 700;
 width = 700;
+velocity = 0.5;
 canvas.height = height;
 canvas.width = width;
 
@@ -14,7 +15,6 @@ draw = (x, y, c, s) => {
     m.fillRect(x, y, s, s)
 }
 
-particles = []
 particle = (x, y, c) => {
     return {'x': x, 'y': y, 'vx': 0, 'vy': 0, 'color': c}
 }
@@ -61,16 +61,19 @@ rule = (particles1, particles2, g) => {
     }
 }
 
-
+particles = []
 created_particles = [];
-rules = []
+created_rules = []
 
 update = () => {
+  console.log(created_particles);
+  console.log(created_rules);
+  console.log(particles);
   velocity = velocity_slider.value / 100;
   const t0 = performance.now();
 
-  for (x = 0; x < rules.length; x++){
-    rule(rules[x].particle1, rules[x].particle2, rules[x].g)
+  for (x = 0; x < created_rules.length; x++){
+    rule(created_rules[x].particle1, created_rules[x].particle2, created_rules[x].g)
   }
 
   m.clearRect(0, 0, width, height)
@@ -82,6 +85,15 @@ update = () => {
 
   const t1 = performance.now();
   fps_display.innerHTML = (1 / ((t1 - t0)/1000)).toFixed(0);
+}
+update();
+
+reset = () => {
+  particles = []
+  created_particles = [];
+  created_rules = []
+
+  console.log("Reset");
 }
 
 function createParticle() {
@@ -106,8 +118,44 @@ function createRule() {
     }
   }
   r['g'] = parseFloat(g);
-  rules.push(r);
+  created_rules.push(r);
   console.log("Created rule between " + rule1 + " and " + rule2 + " with " + g + " of force.");
+  console.log(created_particles);
+  console.log(created_rules);
+  console.log(particles);
 }
 
-update();
+function exportFile() {
+  const data = [created_particles, created_rules]
+  const filename = 'data.json';
+  const jsonStr = JSON.stringify(data);
+
+  let element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(jsonStr));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+  document.body.removeChild(element);
+}
+
+function importFile() {
+  var reader = new FileReader();
+  reader.onload = function(){
+    var obj = JSON.parse(event.target.result);
+    reset();
+
+    created_particles = obj[0]
+    created_rules = obj[1]
+    particles = []
+
+    for (i = 0; i < created_particles.length; i++) {
+      for (x = 0; x < created_particles[i].length; x++){
+        particles.push(created_particles[i][x])
+      }
+    }
+  };
+  reader.readAsText(event.target.files[0]);
+}
