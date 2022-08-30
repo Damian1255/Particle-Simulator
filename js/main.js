@@ -2,6 +2,7 @@ canvas = document.getElementById('life');
 velocity_slider = document.getElementById('velocity-slider');
 fps_display = document.getElementById('fps-display');
 rules_display = document.getElementById('rules-display');
+particles_display = document.getElementById('particles-display');
 
 var m = canvas.getContext('2d');
 var fps = 0;
@@ -100,6 +101,7 @@ function createParticle() {
   color = document.getElementById("create-color").value;
   created_particles.push(create(amount, color));
   console.log("Created " + amount + " " + color + " particles.");
+  displayParticles()
 }
 
 function newRule(particle1, particle2, g) {
@@ -162,9 +164,9 @@ function importFile(e) {
       }
     }
     for (i of obj[1]){
-      console.log(i);
       newRule(i[0], i[1], i[2])
     }
+    displayParticles()
   };
   reader.readAsText(event.target.files[0]);
   e.value = null;
@@ -177,6 +179,14 @@ function displayRules() {
   }
 }
 
+function displayParticles() {
+  particles_display.innerHTML = "<p>" + created_particles.length + " sets of particle</p>";
+  for (let i of created_particles){
+    console.log(i.length);
+    particles_display.innerHTML += "<p>" + i.length + " " + i[0].color + " particles</p>";
+  }
+}
+
 function process(e) {
   if (e.value == "Pause") {
     paused = true
@@ -185,5 +195,4 @@ function process(e) {
     paused = false
     e.value = "Pause"
   }
-  console.log(paused);
 }
