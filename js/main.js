@@ -42,16 +42,17 @@ rule = (particles1, particles2, g) => {
         fx = 0
         fy = 0
         for (let j = 0; j < particles2.length; j++){
-            a = particles1[i]
-            b = particles2[j]
-            dx = a.x - b.x
-            dy = a.y - b.y
-            d = Math.sqrt(dx*dx + dy*dy)
-            if (d > 0 && d < 80) {
-                var F = g * 1/d
-                fx += (F *dx)
-                fy += (F * dy)
-            }
+          a = particles1[i]
+          b = particles2[j]
+          dx = a.x - b.x
+          dy = a.y - b.y
+          d = Math.sqrt(dx*dx + dy*dy)
+
+          if (d > 0 && d < 80) {
+            var F = g * 1/d
+            fx += (F *dx)
+            fy += (F * dy)
+          }
         }
         a.vx = (a.vx + fx) * velocity
         a.vy = (a.vy + fy) * velocity
@@ -67,8 +68,9 @@ rule = (particles1, particles2, g) => {
 }
 
 update = () => {
-  velocity = velocity_slider.value / 100;
   const t0 = performance.now();
+  
+  velocity = velocity_slider.value / 100;
   if (!paused) {
     for (x = 0; x < created_rules.length; x++){
       rule(created_rules[x].particle1, created_rules[x].particle2, created_rules[x].g)
@@ -82,6 +84,7 @@ update = () => {
     }
   }
   requestAnimationFrame(update)
+
   const t1 = performance.now();
   fps_display.innerHTML = (1 / ((t1 - t0)/1000)).toFixed(0);
 }
@@ -176,7 +179,6 @@ function displayRules() {
 function displayParticles() {
   particles_display.innerHTML = "<p>" + created_particles.length + " sets of particle</p>";
   for (let i of created_particles){
-    console.log(i.length);
     particles_display.innerHTML += "<p>" + i.length + " " + i[0].color + " particles</p>";
   }
 }
