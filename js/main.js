@@ -1,12 +1,17 @@
 canvas = document.getElementById('life');
 velocity_slider = document.getElementById('velocity-slider');
 fps_display = document.getElementById('fps-display');
-m = canvas.getContext('2d');
+rules_display = document.getElementById('rules-display');
 
-fps = 0;
-height = 700;
-width = 700;
-velocity = 0.5;
+var m = canvas.getContext('2d');
+var fps = 0;
+var height = 700;
+var width = 700;
+
+var particles = [];
+var created_particles = [];
+var created_rules = [];
+
 canvas.height = height;
 canvas.width = width;
 
@@ -24,7 +29,7 @@ random = () => {
 }
 
 create = (number, color) => {
-    group = [];
+    var group = [];
     for (let i=0; i < number; i++) {
         group.push(particle(random(), random(), color))
         particles.push(group[i])
@@ -43,7 +48,7 @@ rule = (particles1, particles2, g) => {
             dy = a.y - b.y
             d = Math.sqrt(dx*dx + dy*dy)
             if (d > 0 && d < 80) {
-                F = g * 1/d
+                var F = g * 1/d
                 fx += (F *dx)
                 fy += (F * dy)
             }
@@ -61,16 +66,10 @@ rule = (particles1, particles2, g) => {
     }
 }
 
-particles = []
-created_particles = [];
-created_rules = []
-
 update = () => {
-  console.log(created_particles);
-  console.log(created_rules);
-  console.log(particles);
   velocity = velocity_slider.value / 100;
   const t0 = performance.now();
+  displayRules();
 
   for (x = 0; x < created_rules.length; x++){
     rule(created_rules[x].particle1, created_rules[x].particle2, created_rules[x].g)
@@ -86,6 +85,7 @@ update = () => {
   const t1 = performance.now();
   fps_display.innerHTML = (1 / ((t1 - t0)/1000)).toFixed(0);
 }
+
 update();
 
 reset = () => {
@@ -129,6 +129,7 @@ function exportFile() {
   const data = [created_particles, created_rules]
   const filename = 'data.json';
   const jsonStr = JSON.stringify(data);
+  console.log(data);
 
   let element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(jsonStr));
@@ -141,21 +142,37 @@ function exportFile() {
   document.body.removeChild(element);
 }
 
-function importFile() {
+function importFile(e) {
   var reader = new FileReader();
   reader.onload = function(){
-    var obj = JSON.parse(event.target.result);
     reset();
+    var obj = JSON.parse(event.target.result);
+
+    console.log("RULES:");
+    console.log(obj[1]);
 
     created_particles = obj[0]
-    created_rules = obj[1]
-    particles = []
 
     for (i = 0; i < created_particles.length; i++) {
       for (x = 0; x < created_particles[i].length; x++){
         particles.push(created_particles[i][x])
       }
     }
+    created_rules = obj[1]
   };
   reader.readAsText(event.target.files[0]);
+  e.value = null;
+}
+
+function displayRules() {
+  rules_display.innerHTML = "<p>" + created_rules.length + " rules</p>";
+  for (let i of created_rules){
+    rules_display.innerHTML += "<p>"+ i.particle1[0].color + " and " + i.particle2[0].color + " with force of "+ i.g + "</p>";
+  }
+}
+
+function debug() {
+  console.log(created_particles);
+  console.log(created_rules);
+  console.log(particles);
 }
