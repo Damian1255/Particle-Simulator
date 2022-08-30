@@ -1,11 +1,13 @@
 canvas = document.getElementById('life');
 velocity_slider = document.getElementById('velocity-slider');
+velocity_display = document.getElementById('velocity-display');
 fps_display = document.getElementById('fps-display');
 rules_display = document.getElementById('rules-display');
 particles_display = document.getElementById('particles-display');
 
 var m = canvas.getContext('2d');
 var fps = 0;
+var velocity = 0.5;
 var height = 700;
 var width = 700;
 var paused = false
@@ -69,8 +71,6 @@ rule = (particles1, particles2, g) => {
 
 update = () => {
   const t0 = performance.now();
-  
-  velocity = velocity_slider.value / 100;
   if (!paused) {
     for (x = 0; x < created_rules.length; x++){
       rule(created_rules[x].particle1, created_rules[x].particle2, created_rules[x].g)
@@ -84,9 +84,8 @@ update = () => {
     }
   }
   requestAnimationFrame(update)
-
   const t1 = performance.now();
-  fps_display.innerHTML = (1 / ((t1 - t0)/1000)).toFixed(0);
+  fps_display.innerHTML = "FPS: " + (1 / ((t1 - t0)/1000)).toFixed(0);
 }
 
 update();
@@ -168,19 +167,26 @@ function importFile(e) {
   reader.readAsText(event.target.files[0]);
   e.value = null;
 }
+velocity_slider.oninput = function() {
+  velocity = this.value / 100;
+  velocity_display.innerHTML = "Velocity: " + velocity
+}
 
 function displayRules() {
-  rules_display.innerHTML = "<p>" + created_rules.length + " rules</p>";
+  rules_display.innerHTML = "<h4>Defined rules: " + created_rules.length + "</h4>";
   for (let i of created_rules){
-    rules_display.innerHTML += "<p>"+ i.particle1[0].color + " and " + i.particle2[0].color + " with force of "+ i.g + "</p>";
+    rules_display.innerHTML += "<p>"+ i.particle1[0].color + " and " + i.particle2[0].color + " with force of g = "+ i.g + "</p>";
   }
 }
 
 function displayParticles() {
-  particles_display.innerHTML = "<p>" + created_particles.length + " sets of particle</p>";
+  var total = 0;
+  var text = "";
   for (let i of created_particles){
-    particles_display.innerHTML += "<p>" + i.length + " " + i[0].color + " particles</p>";
+    text += "<p>" + i.length + " " + i[0].color + " particles</p>";
+    total += i.length
   }
+  particles_display.innerHTML = "<h4>Total Particles: " + total + "</h4>" + text;
 }
 
 function process(e) {
