@@ -15,22 +15,24 @@
       <div class="create-particles">
         <input type="number" id="create-amount" min="0" max="1000" value="10" placeholder="Amount">
         <input type="text" id="create-color" value="" placeholder="Color">
-        <input type="button" value="Create" onclick="createParticle()">
+        <input type="button" id="particles-btn" value="Create">
       </div>
       <div class="create-rules">
         <input type="text" id="rule1-color" value="" placeholder="Particle 1">
         <input type="text" id="rule2-color" value="" placeholder="Particle 2">
         <input type="number" id="rule-force" min="-1" max="1" value="0" placeholder="Force">
-        <input type="button" value="Create" onclick="createRule()">
+        <input type="button" id="rule-btn" value="Create">
       </div>
+      <input type="range" name="Particle Size" min="1" max="8" value="4" id="size-slider">
+      <label id="size-display" for="Particle Size">Size = 4</label>
+      <input type="range" name="velocity" min="0" max="100" value="50" id="velocity-slider">
+      <label id="velocity-display" for="velocity">Velocity = 0.5</label>
+      <input type="button" value="Reset" onclick="reset()">
+      <input type="button" id="state-btn" value="Pause Simulation">
       <div class="export">
         <input type="button" value="Export" onclick="exportFile()">
         <input type="file" accept="application/JSON" onchange="importFile(this)">
       </div>
-      <input type="button" value="Reset" onclick="reset()">
-      <input type="button" id="state-btn" value="Pause Simulation">
-      <input type="range" name="velocity" min="0" max="100" value="50" id="velocity-slider">
-      <label id="velocity-display" for="velocity">Velocity = 0.5</label>
       <div class="container">
         <div class="particles-display" id="particles-display"></div>
         <div class="rules-display" id="rules-display"></div>

@@ -1,9 +1,19 @@
 canvas = document.getElementById('life');
+
+size_slider = document.getElementById('size-slider');
+size_display = document.getElementById('size-display');
+
 velocity_slider = document.getElementById('velocity-slider');
 velocity_display = document.getElementById('velocity-display');
+
 fps_display = document.getElementById('fps-display');
+
 rules_display = document.getElementById('rules-display');
+create_rules_button = document.getElementById('rule-btn');
+
 particles_display = document.getElementById('particles-display');
+create_particles_button = document.getElementById('particles-btn');
+
 state_button = document.getElementById('state-btn');
 
 var m = canvas.getContext('2d');
@@ -11,6 +21,7 @@ var fps = 0;
 var velocity = 0.5;
 var height = 700;
 var width = 700;
+var size = 4;
 var paused = false;
 
 var created_particles = [];
@@ -81,7 +92,7 @@ update = () => {
   draw(0, 0, "black", width, height)
   for (i = 0; i < created_particles.length; i++) {
     for (j = 0; j < created_particles[i].length; j++) {
-      draw(created_particles[i][j].x, created_particles[i][j].y, created_particles[i][j].color, 4);
+      draw(created_particles[i][j].x, created_particles[i][j].y, created_particles[i][j].color, size);
     }
   }
   requestAnimationFrame(update);
@@ -109,7 +120,7 @@ reset = () => {
   console.log("Reset");
 }
 
-function createParticle() {
+create_particles_button.onclick = function() {
   amount = document.getElementById("create-amount").value;
   color = document.getElementById("create-color").value;
   created_particles.push(create(amount, color));
@@ -134,7 +145,7 @@ function newRule(particle1, particle2, g) {
               " with " + g + " of force.");
 }
 
-function createRule() {
+create_rules_button.onclick = function() {
   particle1 = document.getElementById("rule1-color").value;
   particle2 = document.getElementById("rule2-color").value;
   g = document.getElementById("rule-force").value;
@@ -191,6 +202,11 @@ function importFile(e) {
 velocity_slider.oninput = function() {
   velocity = this.value / 100;
   velocity_display.innerHTML = "Velocity: " + velocity;
+}
+
+size_slider.oninput = function() {
+  size = this.value;
+  size_display.innerHTML = "Size: " + size;
 }
 
 function displayRules() {
