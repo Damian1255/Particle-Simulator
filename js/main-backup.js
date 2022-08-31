@@ -159,7 +159,7 @@ function exportFile() {
     c_rules.push([i.particle1[0].color, i.particle2[0].color, i.g]);
   }
 
-  const data = [created_particles, c_rules, velocity, size];
+  const data = [created_particles, c_rules];
   const filename = 'new.json';
   const jsonStr = JSON.stringify(data);
 
@@ -186,11 +186,7 @@ function importFile(e) {
         for (i of obj[1]) {
           newRule(i[0], i[1], i[2]);
         }
-        velocity = obj[2];
-        size = obj[3];
-
-        updateUI();
-        displayParticles();
+        displayParticles()
       } catch (e) {
         alert("Invalid file content.")
         return
@@ -205,20 +201,12 @@ function importFile(e) {
 
 velocity_slider.oninput = function() {
   velocity = this.value / 100;
-  updateUI();
+  velocity_display.innerHTML = "Velocity: " + velocity;
 }
 
 size_slider.oninput = function() {
   size = this.value;
-  updateUI();
-}
-
-function updateUI() {
-  velocity_slider.value = velocity * 100;
-  velocity_display.innerHTML = "Velocity = " + velocity;
-
-  size_slider.value = size
-  size_display.innerHTML = "Size = " + size;
+  size_display.innerHTML = "Size: " + size;
 }
 
 function displayRules() {
