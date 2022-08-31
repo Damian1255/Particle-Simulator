@@ -103,6 +103,7 @@ update = () => {
 update();
 displayRules();
 displayParticles();
+updateUI();
 
 setInterval(function () {
   if (fps < 10000) {
@@ -219,6 +220,11 @@ function updateUI() {
 
   size_slider.value = size
   size_display.innerHTML = "Size = " + size;
+  if (paused) {
+    state_button.value = "Play Simulation";
+  } else {
+    state_button.value = "Pause Simulation";
+  }
 }
 
 function displayRules() {
@@ -242,9 +248,8 @@ function displayParticles() {
 state_button.onclick = function() {
   if (paused) {
     paused = false;
-    this.value = "Pause Simulation";
   } else {
     paused = true;
-    this.value = "Play Simulation";
   }
+  updateUI();
 }
