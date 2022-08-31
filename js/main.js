@@ -4,13 +4,14 @@ velocity_display = document.getElementById('velocity-display');
 fps_display = document.getElementById('fps-display');
 rules_display = document.getElementById('rules-display');
 particles_display = document.getElementById('particles-display');
+state_button = document.getElementById('state-btn');
 
 var m = canvas.getContext('2d');
 var fps = 0;
 var velocity = 0.5;
 var height = 700;
 var width = 700;
-var paused = false
+var paused = false;
 
 var created_particles = [];
 var created_rules = [];
@@ -19,8 +20,8 @@ canvas.height = height;
 canvas.width = width;
 
 draw = (x, y, c, s) => {
-    m.fillStyle = c
-    m.fillRect(x, y, s, s)
+    m.fillStyle = c;
+    m.fillRect(x, y, s, s);
 }
 
 particle = (x, y, c) => {
@@ -28,13 +29,13 @@ particle = (x, y, c) => {
 }
 
 random = () => {
-    return Math.random() * (width - 100) + 50
+    return Math.random() * (width - 100) + 50;
 }
 
 create = (number, color) => {
     var group = [];
     for (let i=0; i < number; i++) {
-        group.push(particle(random(), random(), color))
+        group.push(particle(random(), random(), color));
     }
     return group
 }
@@ -72,28 +73,39 @@ rule = (particles1, particles2, g) => {
 update = () => {
   const t0 = performance.now();
   if (!paused) {
-    for (x = 0; x < created_rules.length; x++){
-      rule(created_rules[x].particle1, created_rules[x].particle2, created_rules[x].g)
+    for (x = 0; x < created_rules.length; x++) {
+      rule(created_rules[x].particle1, created_rules[x].particle2, created_rules[x].g);
     }
   }
   m.clearRect(0, 0, width, height)
   draw(0, 0, "black", width, height)
-  for (i = 0; i < created_particles.length; i++){
-    for (j = 0; j < created_particles[i].length; j++){
-      draw(created_particles[i][j].x, created_particles[i][j].y, created_particles[i][j].color, 4)
+  for (i = 0; i < created_particles.length; i++) {
+    for (j = 0; j < created_particles[i].length; j++) {
+      draw(created_particles[i][j].x, created_particles[i][j].y, created_particles[i][j].color, 4);
     }
   }
-  requestAnimationFrame(update)
+  requestAnimationFrame(update);
   const t1 = performance.now();
-  fps_display.innerHTML = "FPS: " + (1 / ((t1 - t0)/1000)).toFixed(0);
+  fps = (1 / ((t1 - t0)/1000)).toFixed(1);
 }
 
 update();
+displayRules();
+displayParticles();
+
+setInterval(function () {
+  if (fps < 10000) {
+    fps_display.innerHTML = "FPS: " + fps;
+  } else {
+    fps_display.innerHTML = "FPS: 10000";
+  }
+  }, 1000);
 
 reset = () => {
   created_particles = [];
   created_rules = [];
-
+  displayRules();
+  displayParticles();
   console.log("Reset");
 }
 
@@ -102,17 +114,17 @@ function createParticle() {
   color = document.getElementById("create-color").value;
   created_particles.push(create(amount, color));
   console.log("Created " + amount + " " + color + " particles.");
-  displayParticles()
+  displayParticles();
 }
 
 function newRule(particle1, particle2, g) {
-  r = {}
-  for (i = 0; i < created_particles.length; i++){
-    if (created_particles[i][0].color == particle1){
-      r['particle1'] = created_particles[i]
+  r = {};
+  for (i = 0; i < created_particles.length; i++) {
+    if (created_particles[i][0].color == particle1) {
+      r['particle1'] = created_particles[i];
     }
-    if (created_particles[i][0].color == particle2){
-      r['particle2'] = created_particles[i]
+    if (created_particles[i][0].color == particle2) {
+      r['particle2'] = created_particles[i];
     }
   }
   r['g'] = parseFloat(g);
@@ -127,17 +139,17 @@ function createRule() {
   particle2 = document.getElementById("rule2-color").value;
   g = document.getElementById("rule-force").value;
 
-  newRule(particle1, particle2, g)
+  newRule(particle1, particle2, g);
 }
 
 function exportFile() {
-  c_rules = []
+  c_rules = [];
   for (var i of created_rules){
     c_rules.push([i.particle1[0].color, i.particle2[0].color, i.g]);
   }
 
-  const data = [created_particles, c_rules]
-  const filename = 'data.json';
+  const data = [created_particles, c_rules];
+  const filename = 'new.json';
   const jsonStr = JSON.stringify(data);
 
   let element = document.createElement('a');
@@ -152,49 +164,59 @@ function exportFile() {
 }
 
 function importFile(e) {
-  var reader = new FileReader();
-  reader.onload = function(){
-    reset();
-    var obj = JSON.parse(event.target.result);
+  if (e.value.split(".").at(-1).toLowerCase() == "json") {
+    var reader = new FileReader();
+    reader.onload = function() {
+      try {
+        var obj = JSON.parse(event.target.result);
+        reset();
 
-    created_particles = obj[0]
-    for (i of obj[1]){
-      newRule(i[0], i[1], i[2])
-    }
-
-    displayParticles()
-  };
-  reader.readAsText(event.target.files[0]);
+        created_particles = obj[0];
+        for (i of obj[1]) {
+          newRule(i[0], i[1], i[2]);
+        }
+        displayParticles()
+      } catch (e) {
+        alert("Invalid file content.")
+        return
+      }
+    };
+    reader.readAsText(event.target.files[0]);
+  } else {
+    alert("Invalid file type.");
+  }
   e.value = null;
 }
+
 velocity_slider.oninput = function() {
   velocity = this.value / 100;
-  velocity_display.innerHTML = "Velocity: " + velocity
+  velocity_display.innerHTML = "Velocity: " + velocity;
 }
 
 function displayRules() {
-  rules_display.innerHTML = "<h4>Defined rules: " + created_rules.length + "</h4>";
-  for (let i of created_rules){
-    rules_display.innerHTML += "<p>"+ i.particle1[0].color + " and " + i.particle2[0].color + " with force of g = "+ i.g + "</p>";
+  var text = "";
+  for (let i of created_rules) {
+    text += "<p>"+ i.particle1[0].color + " and " + i.particle2[0].color + " with force of g = "+ i.g + "</p>";
   }
+  rules_display.innerHTML = "<h4>Defined rules: " + created_rules.length + "</h4>" + text;
 }
 
 function displayParticles() {
   var total = 0;
   var text = "";
-  for (let i of created_particles){
+  for (let i of created_particles) {
     text += "<p>" + i.length + " " + i[0].color + " particles</p>";
-    total += i.length
+    total += i.length;
   }
   particles_display.innerHTML = "<h4>Total Particles: " + total + "</h4>" + text;
 }
 
-function process(e) {
-  if (e.value == "Pause") {
-    paused = true
-    e.value = "Play"
-  } else if (e.value == "Play"){
-    paused = false
-    e.value = "Pause"
+state_button.onclick = function() {
+  if (paused) {
+    paused = false;
+    this.value = "Pause Simulation";
+  } else {
+    paused = true;
+    this.value = "Play Simulation";
   }
 }

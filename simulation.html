@@ -11,9 +11,7 @@
       <canvas id="life"></canvas>
     </section>
     <section class="display">
-      <div class="particles-display" id="particles-display"></div>
-      <div class="rules-display" id="rules-display"></div>
-      <p id="fps-display"></p>
+      <p id="fps-display">FPS: 0.0</p>
       <div class="create-particles">
         <input type="number" id="create-amount" min="0" max="1000" value="10" placeholder="Amount">
         <input type="text" id="create-color" value="" placeholder="Color">
@@ -27,12 +25,16 @@
       </div>
       <div class="export">
         <input type="button" value="Export" onclick="exportFile()">
-        <input type="file" value="Import" accept="application/JSON" onchange="importFile(this)">
+        <input type="file" accept="application/JSON" onchange="importFile(this)">
       </div>
       <input type="button" value="Reset" onclick="reset()">
-      <input type="button" value="Pause" onclick="process(this)">
+      <input type="button" id="state-btn" value="Pause Simulation">
       <input type="range" name="velocity" min="0" max="100" value="50" id="velocity-slider">
       <label id="velocity-display" for="velocity">Velocity = 0.5</label>
+      <div class="container">
+        <div class="particles-display" id="particles-display"></div>
+        <div class="rules-display" id="rules-display"></div>
+      </div>
       <script src="js/main.js" type="text/javascript"></script>
     </section>
   </body>

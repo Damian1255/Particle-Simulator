@@ -5,10 +5,42 @@ body {
 body {
   display: flex;
   align-items: center;
+  justify-content: space-evenly;
   width: 100%;
   height: 100vh;
+  flex-direction: row;
 }
 
 section {
-  width: 100%;
+
+}
+
+.display {
+  display: flex;
+  flex-direction: column;
+}
+
+.particles-display, .rules-display {
+  height: 250px;
+  overflow-y: auto;
+}
+
+.rules-display {
+  width: 60%;
+}
+
+.particles-display {
+  width: 40%;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+@media only screen and (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
 }
