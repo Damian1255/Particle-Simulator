@@ -22,7 +22,7 @@ var velocity = 0.5;
 var height = 700;
 var width = 700;
 var size = 4;
-var paused = false;
+var paused = true;
 
 var created_particles = [];
 var created_rules = [];
