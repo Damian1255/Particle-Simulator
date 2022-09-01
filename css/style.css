@@ -21,21 +21,14 @@ section {
 }
 
 .particles-display, .rules-display {
-  height: 250px;
+  max-height: 200px;
+  width: 100%;
   overflow-y: auto;
-}
-
-.rules-display {
-  width: 60%;
-}
-
-.particles-display {
-  width: 40%;
 }
 
 .container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
 }
 

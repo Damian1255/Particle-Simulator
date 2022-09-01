@@ -64,7 +64,7 @@ rule = (particles1, particles2, g) => {
 
           if (d > 0 && d < 80) {
             var F = g * 1/d
-            fx += (F *dx)
+            fx += (F * dx)
             fy += (F * dy)
           }
         }
@@ -229,8 +229,13 @@ function updateUI() {
 
 function displayRules() {
   var text = "";
-  for (let i of created_rules) {
-    text += "<p>"+ i.particle1[0].color + " and " + i.particle2[0].color + " with force of g = "+ i.g + "</p>";
+  for (let i = 0; i < created_rules.length; i++) {
+    var delete_btn = " | <input type='button' class='rule-delete' data-index='" + i + "' onclick='deleteRule(this)' value='Delete Rule'>";
+    var p1 = created_rules[i].particle1[0].color;
+    var p2 = created_rules[i].particle2[0].color;
+    var g = created_rules[i].g;
+
+    text += "<p>"+ p1 + " and " + p2 + " | g = "+ g + delete_btn + "</p>";
   }
   rules_display.innerHTML = "<h4>Defined rules: " + created_rules.length + "</h4>" + text;
 }
@@ -252,4 +257,12 @@ state_button.onclick = function() {
     paused = true;
   }
   updateUI();
+}
+
+function deleteRule(e) {
+  index = e.dataset.index;
+  if (index > -1) {
+    created_rules.splice(index, 1);
+  }
+  displayRules();
 }
