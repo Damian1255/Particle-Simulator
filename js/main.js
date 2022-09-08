@@ -1,21 +1,3 @@
-canvas = document.getElementById('life');
-
-size_slider = document.getElementById('size-slider');
-size_display = document.getElementById('size-display');
-
-velocity_slider = document.getElementById('velocity-slider');
-velocity_display = document.getElementById('velocity-display');
-
-fps_display = document.getElementById('fps-display');
-
-rules_display = document.getElementById('rules-display');
-create_rules_button = document.getElementById('rule-btn');
-
-particles_display = document.getElementById('particles-display');
-create_particles_button = document.getElementById('particles-btn');
-
-state_button = document.getElementById('state-btn');
-
 var m = canvas.getContext('2d');
 var fps = 0;
 var velocity = 0.5;
@@ -81,7 +63,7 @@ rule = (particles1, particles2, g) => {
     }
 }
 
-update = () => {
+frame = () => {
   const t0 = performance.now();
   if (!paused) {
     for (x = 0; x < created_rules.length; x++) {
@@ -95,38 +77,22 @@ update = () => {
       draw(created_particles[i][j].x, created_particles[i][j].y, created_particles[i][j].color, size);
     }
   }
-  requestAnimationFrame(update);
+  requestAnimationFrame(frame);
   const t1 = performance.now();
   fps = (1 / ((t1 - t0)/1000)).toFixed(1);
 }
 
-update();
+frame();
 displayRules();
 displayParticles();
 updateUI();
 
-setInterval(function () {
-  if (fps < 10000) {
-    fps_display.innerHTML = "FPS: " + fps;
-  } else {
-    fps_display.innerHTML = "FPS: 10000";
-  }
-  }, 1000);
-
-reset = () => {
+function reset() {
   created_particles = [];
   created_rules = [];
   displayRules();
   displayParticles();
   console.log("Reset");
-}
-
-create_particles_button.onclick = function() {
-  amount = document.getElementById("create-amount").value;
-  color = document.getElementById("create-color").value;
-  created_particles.push(create(amount, color));
-  console.log("Created " + amount + " " + color + " particles.");
-  displayParticles();
 }
 
 function newRule(particle1, particle2, g) {
@@ -144,14 +110,6 @@ function newRule(particle1, particle2, g) {
   displayRules();
   console.log("Created rule between " + particle1 + " and " + particle2 +
               " with " + g + " of force.");
-}
-
-create_rules_button.onclick = function() {
-  particle1 = document.getElementById("rule1-color").value;
-  particle2 = document.getElementById("rule2-color").value;
-  g = document.getElementById("rule-force").value;
-
-  newRule(particle1, particle2, g);
 }
 
 function exportFile() {
@@ -202,61 +160,6 @@ function importFile(e) {
     alert("Invalid file type.");
   }
   e.value = null;
-}
-
-velocity_slider.oninput = function() {
-  velocity = this.value / 100;
-  updateUI();
-}
-
-size_slider.oninput = function() {
-  size = this.value;
-  updateUI();
-}
-
-function updateUI() {
-  velocity_slider.value = velocity * 100;
-  velocity_display.innerHTML = "Velocity = " + velocity;
-
-  size_slider.value = size
-  size_display.innerHTML = "Size = " + size;
-  if (paused) {
-    state_button.value = "Play Simulation";
-  } else {
-    state_button.value = "Pause Simulation";
-  }
-}
-
-function displayRules() {
-  var text = "";
-  for (let i = 0; i < created_rules.length; i++) {
-    var delete_btn = " | <input type='button' class='rule-delete' data-index='" + i + "' onclick='deleteRule(this)' value='Delete Rule'>";
-    var p1 = created_rules[i].particle1[0].color;
-    var p2 = created_rules[i].particle2[0].color;
-    var g = created_rules[i].g;
-
-    text += "<p>"+ p1 + " and " + p2 + " | g = "+ g + delete_btn + "</p>";
-  }
-  rules_display.innerHTML = "<h4>Defined rules: " + created_rules.length + "</h4>" + text;
-}
-
-function displayParticles() {
-  var total = 0;
-  var text = "";
-  for (let i of created_particles) {
-    text += "<p>" + i.length + " " + i[0].color + " particles</p>";
-    total += i.length;
-  }
-  particles_display.innerHTML = "<h4>Total Particles: " + total + "</h4>" + text;
-}
-
-state_button.onclick = function() {
-  if (paused) {
-    paused = false;
-  } else {
-    paused = true;
-  }
-  updateUI();
 }
 
 function deleteRule(e) {

@@ -1,5 +1,5 @@
 body {
-  margin: 0
+  margin: 0;
 }
 
 body {
@@ -11,25 +11,55 @@ body {
   flex-direction: row;
 }
 
-section {
-
-}
-
 .display {
   display: flex;
   flex-direction: column;
 }
 
-.particles-display, .rules-display {
-  height: 200px;
-  width: 100%;
-  overflow-y: auto;
+.particles-display h4, .rules-display h4{
+  margin: 10px 0px;
 }
 
 .container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  height: 300px;
+  overflow: auto;
+}
+
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+}
+
+.active, .accordion:hover {
+  background-color: #ccc;
+}
+
+.accordion:after {
+  content: '\002B';
+  color: #777;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  content: "\2212";
+}
+
+.panel {
+  padding: 0 18px;
+  background-color: white;
+  height: 0;
+  overflow: auto;
+  transition: height 0.2s ease-out;
 }
 
 @media only screen and (max-width: 768px) {

@@ -8,35 +8,44 @@
   </head>
   <body>
     <section class="canvas">
-      <canvas id="life"></canvas>
+      <canvas id="screen"></canvas>
     </section>
     <section class="display">
-      <p id="fps-display">FPS: 0.0</p>
-      <input type="button" value="Clear All" onclick="reset()">
-      <input type="button" id="state-btn" value="Play Simulation">
-      <div class="export">
-        <input type="button" value="Export" onclick="exportFile()">
-        <input type="file" accept="application/JSON" onchange="importFile(this)">
-      </div>
-      <input type="range" name="Particle Size" min="1" max="8" value="4" id="size-slider">
-      <label id="size-display" for="Particle Size">Size = 4</label>
-      <input type="range" name="velocity" min="0" max="100" value="50" id="velocity-slider">
-      <label id="velocity-display" for="velocity">Velocity = 0.5</label>
-      <div class="create-particles">
-        <input type="number" id="create-amount" min="0" max="1000" value="10" placeholder="Amount">
-        <input type="text" id="create-color" value="" placeholder="Color">
-        <input type="button" id="particles-btn" value="Create">
-      </div>
-      <div class="create-rules">
-        <input type="text" id="rule1-color" value="" placeholder="Particle 1">
-        <input type="text" id="rule2-color" value="" placeholder="Particle 2">
-        <input type="number" id="rule-force" min="-1" max="1" value="0" placeholder="Force">
-        <input type="button" id="rule-btn" value="Create">
+      <div class="container">
+        <p id="fps-display">FPS: 0.0</p>
+        <input type="button" value="Clear All" onclick="reset()">
+        <input type="button" id="state-btn" value="Play Simulation">
+        <div class="export">
+          <input type="button" value="Export" onclick="exportFile()">
+          <input type="file" accept="application/JSON" onchange="importFile(this)">
+        </div>
+        <input type="range" name="Particle Size" min="1" max="8" value="4" id="size-slider">
+        <label id="size-display" for="Particle Size">Size = 4</label>
+        <input type="range" name="velocity" min="0" max="100" value="50" id="velocity-slider">
+        <label id="velocity-display" for="velocity">Velocity = 0.5</label>
+        <div class="create-particles">
+          <input type="number" id="create-amount" min="0" max="1000" value="10" placeholder="Amount">
+          <input type="text" id="create-color" value="" placeholder="Color">
+          <input type="button" id="particles-btn" value="Create">
+        </div>
+        <div class="create-rules">
+          <input type="text" id="rule1-color" value="" placeholder="Particle 1">
+          <input type="text" id="rule2-color" value="" placeholder="Particle 2">
+          <input type="number" id="rule-force" min="-1" max="1" value="0" placeholder="Force">
+          <input type="button" id="rule-btn" value="Create">
+        </div>
       </div>
       <div class="container">
         <div class="particles-display" id="particles-display"></div>
         <div class="rules-display" id="rules-display"></div>
+        <button class="accordion">Section 1</button>
+        <div class="panel">text</div>
+        <button class="accordion">Section 2</button>
+        <div class="panel">text</div>
+        <button class="accordion">Section 3</button>
+        <div class="panel">text</div>
       </div>
+      <script src="js/ui.js" type="text/javascript"></script>
       <script src="js/main.js" type="text/javascript"></script>
     </section>
   </body>
