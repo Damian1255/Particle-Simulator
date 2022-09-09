@@ -83,15 +83,11 @@ frame = () => {
 }
 
 frame();
-displayRules();
-displayParticles();
 updateUI();
 
 function reset() {
   created_particles = [];
   created_rules = [];
-  displayRules();
-  displayParticles();
   console.log("Reset");
 }
 
@@ -107,7 +103,6 @@ function newRule(particle1, particle2, g) {
   }
   r['g'] = parseFloat(g);
   created_rules.push(r);
-  displayRules();
   console.log("Created rule between " + particle1 + " and " + particle2 +
               " with " + g + " of force.");
 }
@@ -149,7 +144,6 @@ function importFile(e) {
         size = obj[3];
 
         updateUI();
-        displayParticles();
       } catch (e) {
         alert("Invalid file content.")
         return
@@ -167,5 +161,4 @@ function deleteRule(e) {
   if (index > -1) {
     created_rules.splice(index, 1);
   }
-  displayRules();
 }

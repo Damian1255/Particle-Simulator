@@ -40,7 +40,7 @@ body {
   background-color: #eee;
   color: #444;
   cursor: pointer;
-  padding: 18px;
+  padding: 12px;
   width: 100%;
   border: none;
   text-align: left;
@@ -68,9 +68,9 @@ body {
 .panel {
   padding: 0 18px;
   background-color: white;
-  height: 0;
+  max-height: 0;
   overflow: auto;
-  transition: height 0.2s ease-out;
+  transition: max-height 0.2s ease-out;
 }
 
 @media only screen and (max-width: 768px) {

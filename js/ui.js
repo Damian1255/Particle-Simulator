@@ -1,4 +1,6 @@
 canvas = document.getElementById('screen');
+accordion = document.getElementsByClassName("accordion");
+acc_container = document.getElementById("accd-container");
 
 size_slider = document.getElementById('size-slider');
 size_display = document.getElementById('size-display');
@@ -38,29 +40,7 @@ function updateUI() {
   } else {
     state_button.value = "Pause Simulation";
   }
-}
-
-function displayRules() {
-  var text = "";
-  for (let i = 0; i < created_rules.length; i++) {
-    var delete_btn = " | <input type='button' class='rule-delete' data-index='" + i + "' onclick='deleteRule(this)' value='Delete Rule'>";
-    var p1 = created_rules[i].particle1[0].color;
-    var p2 = created_rules[i].particle2[0].color;
-    var g = created_rules[i].g;
-
-    text += "<p>"+ p1 + " and " + p2 + " | g = "+ g + delete_btn + "</p>";
-  }
-  rules_display.innerHTML = "<h4>Defined rules: " + created_rules.length + "</h4><div>" + text + '</div>';
-}
-
-function displayParticles() {
-  var total = 0;
-  var text = "";
-  for (let i of created_particles) {
-    text += "<p>" + i.length + " " + i[0].color + " particles</p>";
-    total += i.length;
-  }
-  particles_display.innerHTML = "<h4>Total Particles: " + total + "</h4><div>" + text + '</div>';
+  loadAccordion()
 }
 
 create_rules_button.onclick = function() {
@@ -98,17 +78,45 @@ state_button.onclick = function() {
   updateUI();
 }
 
-var acc = document.getElementsByClassName("accordion");
-var i;
+function loadAccordion() {
+  acc_container.innerHTML = "";
+  rules_display.innerHTML = "<h4>Defined rules: " + created_rules.length;
 
-for (i = 0; i < acc.length; i++) {
-  acc[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var panel = this.nextElementSibling;
-    if (!this.classList.contains("active")) {
-      panel.style.height = null;
-    } else {
-      panel.style.height = "150px";
+  var total = 0;
+  for (let i of created_particles) {
+    total += i.length;
+  }
+  particles_display.innerHTML = "<h4>Total Particles: " + total + "</h4>";
+
+  for (let x = 0; x < created_particles.length; x++) {
+    let color = created_particles[x][0].color;
+    let amount = created_particles[x].length;
+
+    var button = '<button class="accordion">'+ amount + ' ' + color.toUpperCase() + '</button>';
+    var panel = "";
+
+    for (let y = 0; y < created_rules.length; y++) {
+      if (created_rules[y].particle1[0].color == color) {
+        var delete_btn = " | <input type='button' class='rule-delete' data-index='" + i + "' onclick='deleteRule(this)' value='Delete Rule'>";
+        var p1 = created_rules[y].particle1[0].color;
+        var p2 = created_rules[y].particle2[0].color;
+        var g = created_rules[y].g;
+        panel += '<p>' + p1 + " and " + p2 + " | g = "+ g + delete_btn + '</p>';
+      }
     }
-  });
+    
+    acc_container.innerHTML += button + '<div class="panel">' + panel + '</div>';
+  }
+
+  for (let i = 0; i < accordion.length; i++) {
+    accordion[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+      if (!this.classList.contains("active")) {
+        panel.style.maxHeight = null;
+      } else {
+        panel.style.maxHeight = "160px";
+      }
+    });
+  }
 }
