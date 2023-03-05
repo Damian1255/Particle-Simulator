@@ -73,6 +73,18 @@ body {
   transition: max-height 0.2s ease-out;
 }
 
+.rule-delete {
+  float: right;
+}
+
+.export {
+  margin: 12px 0px;
+}
+
+.create-rules, .create-particles {
+  margin-top: 12px;
+}
+
 @media only screen and (max-width: 768px) {
   body {
     flex-direction: column;

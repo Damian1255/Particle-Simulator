@@ -30,10 +30,10 @@ setInterval(function () {
 
 function updateUI() {
   velocity_slider.value = velocity * 100;
-  velocity_display.innerHTML = "Velocity = " + velocity;
+  velocity_display.innerHTML = "Particle Velocity = " + velocity;
 
   size_slider.value = size
-  size_display.innerHTML = "Size = " + size;
+  size_display.innerHTML = "Particle Size = " + size;
 
   if (paused) {
     state_button.value = "Play Simulation";
